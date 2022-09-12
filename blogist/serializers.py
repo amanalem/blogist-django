@@ -1,4 +1,4 @@
-from dataclasses import fields
+
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 import django.contrib.auth.password_validation as validations
@@ -52,9 +52,8 @@ class ReplySerializer(serializers.ModelSerializer):
         model = Reply
         fields = '__all__'
 
-        
+
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = '__all__'
-

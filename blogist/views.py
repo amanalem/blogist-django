@@ -1,9 +1,9 @@
-from msilib.schema import AppId
+
 from django.shortcuts import render
 from blogist import serializers
 from blogist.apps import BlogistConfig
 from rest_framework.response import Response
-from rest_framework.decorators import blogist_view
+from rest_framework.decorators import api_view
 from .serializers import UserSerializer, PostSerializer, CommentSerializer, ReplySerializer, MessageSerializer
 from .models import Post, Comment, Reply, Message
 from rest_framework.views import APIView

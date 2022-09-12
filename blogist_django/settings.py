@@ -48,7 +48,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'api.authentication.JWTAuthentication',
+        'blogist.authentication.JWTAuthentication',
     ],
 }
 
