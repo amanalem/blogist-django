@@ -1,3 +1,4 @@
+from msilib.schema import AppId
 from django.shortcuts import render
 from blogist import serializers
 from blogist.apps import BlogistConfig
@@ -14,3 +15,46 @@ User = get_user_model()
 
 
 # Create your views here.
+
+class RegisterView(APIView):
+    def post(self, req):
+        serializer = UserSerializer(data=req.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'Registration Successful'})
+        return Response(serializer.errors, status=422)
+
+
+class LoginView(APIView):
+    def get_user(self, email):
+        try:
+            return User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise PermissionDenied({'message': 'Invalid Credentials'})
+
+    def post(self, req):
+        email = req.data.get('email')
+        password = req.data.get('password')
+
+        user = self.get_user(email)
+        if not user.check_password(password):
+            raise PermissionDenied({'message': 'Invalid Credentials'})
+
+        token = jwt.encode(
+            {'sub': user.id}, settings.SECRET_KEY, algorithm='HS256')
+
+        return Response({'token': token, 'message': f'Welcome {user.username}'})
+
+
+class PostsView(APIView):
+    def get(self, req):
+        posts = Post.objects.all()
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
+
+    def post(self, req):
+        serializer = PostSerializer(data=req.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'New Post Created!'})
+        return Response(serializer.errors, status=422)
