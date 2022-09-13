@@ -64,7 +64,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:3001", ]
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000", ]
 
 ROOT_URLCONF = 'blogist_django.urls'
 

@@ -1,4 +1,4 @@
-
+from django.http import JsonResponse
 from django.shortcuts import render
 from blogist import serializers
 from blogist.apps import BlogistConfig
