@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,6 +27,19 @@ SECRET_KEY = 'django-insecure-4pq@90h$662p9wz02omcn)im8w*db&ycc*o^g&zf4dkw(#+s_%
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000", ]
+
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'X-CSRFTOKEN'
+]
+
+CSRF_COOKIE_NAME = "csrftoken"
+CSRF_COOKIE_HTTPONLY = False
+CORS_EXPOSE_HEADERS = ["Content-type", "X-CSRFToken"]
+CORS_ALLOWED_CREDENTIALS = True
 
 
 # Application definition
@@ -64,7 +78,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:3000", ]
 
 ROOT_URLCONF = 'blogist_django.urls'
 

@@ -1,3 +1,4 @@
+from ast import Delete
 from django.http import JsonResponse
 from django.shortcuts import render
 from blogist import serializers
@@ -8,6 +9,7 @@ from .serializers import UserSerializer, PostSerializer, CommentSerializer, Repl
 from .models import Post, Comment, Reply, Message
 from rest_framework.views import APIView
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.parsers import JSONParser
 from django.contrib.auth import get_user_model
 from django.conf import settings
 import jwt
@@ -47,14 +49,33 @@ class LoginView(APIView):
 
 
 class PostsView(APIView):
-    def get(self, req):
+    def get(self, request):
         posts = Post.objects.all()
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
 
-    def post(self, req):
-        serializer = PostSerializer(data=req.data)
+    def post(self, request):
+        # post_data = JSONParser().parse(request)
+        serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'message': 'New Post Created!'})
+            return Response(serializer.data)
         return Response(serializer.errors, status=422)
+
+
+# def delete_post(request, pk):
+#     post = Post.objects.get(pk=pk)
+#     post.delete()
+
+class PostDetailView(APIView):
+    def delete(self, request, pk, format=None):
+        post = Post.objects.get(pk=pk)
+        post.delete()
+        return Response({"message": "Post Deleted"})
+
+
+class BlogistView(APIView):
+    def get(self, req):
+        blogist = User.objects.get(is_staff=True)
+        serializer = UserSerializer(blogist)
+        return Response(serializer.data)
