@@ -63,15 +63,24 @@ class PostsView(APIView):
         return Response(serializer.errors, status=422)
 
 
-# def delete_post(request, pk):
-#     post = Post.objects.get(pk=pk)
-#     post.delete()
-
 class PostDetailView(APIView):
+    def get(self, request, pk, format=None):
+        post = Post.objects.get(pk=pk)
+        serializer = PostSerializer(post)
+        return Response(serializer.data)
+
     def delete(self, request, pk, format=None):
         post = Post.objects.get(pk=pk)
         post.delete()
         return Response({"message": "Post Deleted"})
+
+    def put(self, request, pk, format=None):
+        post = Post.objects.get(pk=pk)
+        serializer = PostSerializer(post, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=422)
 
 
 class BlogistView(APIView):
