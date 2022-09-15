@@ -8,6 +8,7 @@ User = get_user_model()
 
 class Post(models.Model):
     media = models.TextField()
+    media_alt = models.CharField(max_length=100, default='No alt text')
     title = models.CharField(max_length=100)
     body = models.TextField()
 
