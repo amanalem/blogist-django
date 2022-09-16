@@ -1,4 +1,6 @@
+from operator import mod
 from statistics import mode
+from xml.parsers.expat import model
 from django.db import models
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -53,3 +55,15 @@ class Message(models.Model):
 
     def __str__(self):
         return self.author
+
+
+class Style(models.Model):
+    title = models.CharField(max_length=100)
+    title_align = models.CharField(max_length=50, default='center')
+    about = models.TextField()
+    about_img = models.TextField()
+    about_bg_color = models.CharField(max_length=50)
+    about_txt_color = models.CharField(max_length=50)
+    blog_bg_img = models.TextField()
+    blog_bg_color = models.CharField(max_length=50)
+    blog_txt_color = models.CharField(max_length=50)

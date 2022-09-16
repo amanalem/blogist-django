@@ -5,8 +5,8 @@ from blogist import serializers
 from blogist.apps import BlogistConfig
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .serializers import UserSerializer, PostSerializer, CommentSerializer, ReplySerializer, MessageSerializer
-from .models import Post, Comment, Reply, Message
+from .serializers import StyleSerializer, UserSerializer, PostSerializer, CommentSerializer, ReplySerializer, MessageSerializer
+from .models import Post, Comment, Reply, Message, Style
 from rest_framework.views import APIView
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.parsers import JSONParser
@@ -48,6 +48,13 @@ class LoginView(APIView):
         return Response({'token': token, 'message': f'Welcome {user.username}'})
 
 
+class BlogistView(APIView):
+    def get(self, req):
+        blogist = User.objects.get(is_staff=True)
+        serializer = UserSerializer(blogist)
+        return Response(serializer.data)
+
+
 class PostsView(APIView):
     def get(self, request):
         posts = Post.objects.all()
@@ -83,8 +90,58 @@ class PostDetailView(APIView):
         return Response(serializer.errors, status=422)
 
 
-class BlogistView(APIView):
-    def get(self, req):
-        blogist = User.objects.get(is_staff=True)
-        serializer = UserSerializer(blogist)
+class CommentsView(APIView):
+    def get(self, request, pk, format=None):
+        comments = Comment.objects.filter(post=pk)
+        serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
+
+    def post(self, request):
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=422)
+
+
+class CommentDetailView(APIView):
+    def delete(self, request, pk, format=None):
+        comment = Comment.objects.get(pk=pk)
+        comment.delete()
+        return Response({"message": "Comment Deleted"})
+
+
+class RepliesView(APIView):
+    def get(self, request, pk, format=None):
+        replies = Reply.objects.filter(comment=pk)
+        serializer = ReplySerializer(replies, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = ReplySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=422)
+
+
+class StyleView(APIView):
+    def get(self, request):
+        style = Style.objects.first()
+        serializer = StyleSerializer(style)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = StyleSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=422)
+
+    def put(self, request):
+        style = Style.objects.first()
+        serializer = StyleSerializer(style, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=422)

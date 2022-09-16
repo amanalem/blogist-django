@@ -1,10 +1,11 @@
 
+from dataclasses import field
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 import django.contrib.auth.password_validation as validations
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
-from .models import Post, Comment, Reply, Message
+from .models import Post, Comment, Reply, Message, Style
 User = get_user_model()
 
 
@@ -57,4 +58,10 @@ class ReplySerializer(serializers.ModelSerializer):
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
+        fields = '__all__'
+
+
+class StyleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Style
         fields = '__all__'
