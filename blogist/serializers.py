@@ -16,8 +16,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
 
-        password = data.pop('password')
-        password_confirmation = data.pop('password_confirmation')
+        password = data.get('password')
+        password_confirmation = data.get('password_confirmation')
 
         if password != password_confirmation:
             raise serializers.ValidationError(
@@ -34,7 +34,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'email', 'password',
-                  'password_confirmation', 'id')
+                  'password_confirmation', 'is_superuser', 'id')
 
 
 class PostSerializer(serializers.ModelSerializer):

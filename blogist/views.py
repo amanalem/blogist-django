@@ -19,12 +19,12 @@ User = get_user_model()
 # Create your views here.
 
 class RegisterView(APIView):
-    def post(self, req):
-        serializer = UserSerializer(data=req.data)
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({'message': 'Registration Successful'})
-        return Response(serializer.errors, status=422)
+        return Response({'message': serializer.errors}, status=422)
 
 
 class LoginView(APIView):
@@ -34,23 +34,24 @@ class LoginView(APIView):
         except User.DoesNotExist:
             raise PermissionDenied({'message': 'Invalid Credentials'})
 
-    def post(self, req):
-        email = req.data.get('email')
-        password = req.data.get('password')
+    def post(self, request):
+        email = request.data.get('email')
+        # password = request.data.get('password')
 
         user = self.get_user(email)
-        if not user.check_password(password):
+        serializer = UserSerializer(user)
+        if not serializer.validate(request.data):
             raise PermissionDenied({'message': 'Invalid Credentials'})
 
         token = jwt.encode(
             {'sub': user.id}, settings.SECRET_KEY, algorithm='HS256')
 
-        return Response({'token': token, 'message': f'Welcome {user.username}'})
+        return Response({'token': token, 'user': user, 'message': f'Welcome {user.username} {user.last_name}'})
 
 
 class BlogistView(APIView):
-    def get(self, req):
-        blogist = User.objects.get(is_staff=True)
+    def get(self, request):
+        blogist = User.objects.get(is_superuser=True)
         serializer = UserSerializer(blogist)
         return Response(serializer.data)
 
