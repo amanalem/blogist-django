@@ -58,12 +58,12 @@ class Message(models.Model):
 
 
 class Style(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, default='Blogist')
     title_align = models.CharField(max_length=50, default='center')
-    about = models.TextField()
-    about_img = models.TextField()
-    about_bg_color = models.CharField(max_length=50)
-    about_txt_color = models.CharField(max_length=50)
-    blog_bg_img = models.TextField()
-    blog_bg_color = models.CharField(max_length=50)
-    blog_txt_color = models.CharField(max_length=50)
+    about = models.TextField(default='none')
+    about_img = models.TextField(default='none')
+    about_bg_color = models.CharField(max_length=50, default='white')
+    about_txt_color = models.CharField(max_length=50, default='black')
+    blog_bg_img = models.TextField(default='none')
+    blog_bg_color = models.CharField(max_length=50, default='white')
+    blog_txt_color = models.CharField(max_length=50, default='black')
