@@ -10,13 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
-import django_heroku
 from pathlib import Path
 from corsheaders.defaults import default_headers
-import environ
-env = environ.Env()
-environ.Env.read_env(DEBUG=(bool, False))
-
+import django_heroku
 django_heroku.settings(locals())
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,18 +23,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-4pq@90h$662p9wz02omcn)im8w*db&ycc*o^g&zf4dkw(#+s_%"
+SECRET_KEY = 'django-insecure-4pq@90h$662p9wz02omcn)im8w*db&ycc*o^g&zf4dkw(#+s_%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 CORS_ALLOWED_ORIGINS = ["http://localhost:3000", ]
 
 CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
 
-CORS_ALLOW_HEADERS = []
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'X-CSRFTOKEN'
+]
 
 CSRF_COOKIE_NAME = "csrftoken"
 CSRF_COOKIE_HTTPONLY = False
